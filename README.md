@@ -43,35 +43,82 @@ The envelope carries a game-time header plus `payload.game`, `payload.population
 read is `null` (never `0`) so consumers can distinguish "unknown" from "empty". Full shape:
 [`contracts/src/index.ts`](contracts/src/index.ts).
 
-## Quick start
+## Setup & run — start here (Windows, zero experience needed)
 
-### 1. Build & install the mod (Windows)
+Follow these in order. Each command is meant to be **copy-pasted exactly**. You do **not** need
+timberOS for any of this — the Data Console works on its own. (When you also run timberOS, it will
+automatically pick up this data; see [Running it with timberOS](#running-it-with-timberos).)
 
-```bash
+### Step 1 — Install the free tools you need (one time)
+
+Install these three, clicking "Next/Install" through each installer, then **restart your computer**
+so Windows picks them up:
+
+1. **.NET SDK 8** (builds the mod) — https://dotnet.microsoft.com/download → big "Download .NET SDK" button.
+2. **Git** (downloads the code) — https://git-scm.com/download/win → accept all defaults.
+3. **Node.js LTS** (only needed for the optional offline demo in Step 6) — https://nodejs.org → "LTS" button.
+
+You also need **Timberborn** installed via Steam (this mod targets the 1.0 release).
+
+### Step 2 — Download this project
+
+Open **PowerShell** (press Start, type `PowerShell`, hit Enter) and run:
+
+```powershell
+cd $HOME\Downloads
+git clone https://github.com/rockmandew/timberOSDataConsole.git
+cd timberOSDataConsole
+```
+
+### Step 3 — Build and install the mod (one command)
+
+```powershell
 pwsh scripts/package-mod.ps1
 ```
 
-This compiles against your installed game assemblies and copies the DLL + `manifest.json` into
-`Documents/Timberborn/Mods/rockmandew.TimberOSDataConsole/`. Launch Timberborn, load a settlement,
-then:
+This compiles the mod against your installed game and copies it into
+`Documents\Timberborn\Mods\rockmandew.TimberOSDataConsole\`. When it finishes it prints
+**"Installed to …"**. That's success.
 
-```bash
-curl http://localhost:8080/timberos/v1/snapshot
+> If it can't find the game, your Timberborn is in a non-default folder. Tell it where, then re-run:
+> ```powershell
+> $env:TIMBERBORN_MANAGED = "D:\YourPath\Timberborn\Timberborn_Data\Managed"
+> pwsh scripts/package-mod.ps1
+> ```
+
+### Step 4 — Turn the mod on in the game
+
+1. Launch **Timberborn**.
+2. On the main menu choose **Mods**, make sure **timberOS Data Console** is enabled, and if it asks,
+   let it restart the game.
+3. **Start or load a settlement** (data only exists once you're actually in a colony).
+
+### Step 5 — See your live colony data (the snapshot)
+
+While the game is running with a settlement loaded, open your web browser and go to:
+
+```
+http://localhost:8080/timberos/v1/snapshot
 ```
 
-> The mod references the game DLLs from the default Steam path. If your install differs, set
-> `TIMBERBORN_MANAGED` to your `Timberborn_Data/Managed` folder before building.
+You should see a page of JSON — your real population, resources, weather, and power. That's the
+Data Console working. (`http://localhost:8080/timberos/v1/health` gives a quick "is it alive" check.)
 
-### 2. Run the contract tests + offline demo (no game needed)
+> Seeing `503 / "No snapshot collected yet"`? You're not in a settlement yet — load a colony and
+> refresh. Seeing nothing / can't connect? The mod isn't enabled — recheck Step 4.
 
-```bash
+### Step 6 — (Optional) Try it without the game
+
+To see the data-to-recommendation pipeline without launching Timberborn:
+
+```powershell
 cd contracts
 npm install
-npm test        # validates the reference fixtures against the schema
-npm run demo    # replays a fixture and prints a real depletion recommendation
+npm test        # validates the sample data against the schema
+npm run demo    # prints a real, deterministic depletion recommendation from sample data
 ```
 
-`npm run demo` output (from the bundled fixture):
+Expected `npm run demo` output:
 
 ```
 [RECOMMENDATION · resource-depletion · confidence 80%]
@@ -79,20 +126,29 @@ Log reserves are declining. The colony has 118 logs and is losing about 22 per g
 At the current rate, the 80-log reserve will be reached in about 1.7 days.
 ```
 
-Point the demo at the live game with `TIMBEROS_LIVE=1 npm run demo`.
+(Run `$env:TIMBEROS_LIVE = "1"; npm run demo` to point the demo at the live game instead.)
 
-## How timberOS consumes this
+## Running it with timberOS
 
-timberOS imports `@timberos/data-console-contracts`, fetches `/timberos/v1/snapshot`, validates it
-with `parseTelemetryEnvelope`, and feeds the normalized data into its rules/forecasting engine —
-replacing the simulated values. Wiring timberOS's gateway to this endpoint is the next step (see
-backlog **I-1**).
+The two projects are **independent but better together**:
+
+- **This mod alone** gives you the live JSON snapshot at `localhost:8080` (Steps 1–5 above) — useful
+  on its own for dashboards, scripts, or the offline advisor demo.
+- **[timberOS](https://github.com/rockmandew/timberOS)** is the dashboard/command console. When its
+  gateway is running, it automatically polls this mod's `/timberos/v1/snapshot` and shows your real
+  colony data. If this mod isn't installed, timberOS still runs (it just won't show colony data).
+
+To use both: finish Steps 1–5 here, then follow the **Setup & run** section in the timberOS README.
+No extra configuration is required — timberOS looks for this endpoint automatically.
+
+Under the hood, a consumer imports `@timberos/data-console-contracts`, fetches
+`/timberos/v1/snapshot`, and validates it with `parseTelemetryEnvelope` before use.
 
 ## Prioritized backlog
 
 | ID | Item | Why |
 | --- | --- | --- |
-| **I-1** | Wire the timberOS gateway to `/timberos/v1/snapshot` (replace simulator) | Delivers the real-data payoff in the dashboard |
+| ~~**I-1**~~ | ~~Wire the timberOS gateway to `/timberos/v1/snapshot`~~ ✅ done — the gateway now polls this endpoint and serves it at `/api/colony` | Delivers the real-data payoff in the dashboard |
 | **R-1** | Count goods in non-public building inventories | `resources[]` slightly under-counts during heavy production |
 | **G-1** | Emit a stable settlement GUID, not just the save name | Reliable multi-settlement history keying |
 | **P-1** | Add per-district population + bot workforce breakdown | District-level advisor rules |
