@@ -1,6 +1,6 @@
 {
   "Name": "timberOS Data Console",
-  "Version": "0.3.0",
+  "Version": "0.3.1",
   "Id": "rockmandew.TimberOSDataConsole",
   "MinimumGameVersion": "1.0.0.0",
   "Description": "Extracts live colony telemetry (population, global resources, weather/hazard cycle, power networks) and serves it as JSON on the game's native local HTTP API, so timberOS can run on real data instead of assumptions.",
