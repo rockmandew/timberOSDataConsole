@@ -20,7 +20,7 @@
 #>
 param(
     [string]$Configuration = "Release",
-    [string]$ModsRoot = "$env:USERPROFILE\Documents\Timberborn\Mods",
+    [string]$ModsRoot = "",
     [string]$TimberbornManaged = ""
 )
 
@@ -29,6 +29,16 @@ $root = Split-Path -Parent $PSScriptRoot
 $modProject = Join-Path $root "mod\TimberOS.DataConsole.csproj"
 $manifest = Join-Path $root "mod\manifest.json"
 $modId = "rockmandew.TimberOSDataConsole"
+
+# Resolve the game's Mods folder under the user's real Documents path. GetFolderPath
+# honors OneDrive's "Documents" redirection (common on Windows 11), so we don't
+# hardcode $USERPROFILE\Documents, which is the *wrong* folder when Documents is
+# redirected and would silently install the mod where the game never looks.
+if ([string]::IsNullOrWhiteSpace($ModsRoot)) {
+    $docs = [Environment]::GetFolderPath('MyDocuments')
+    if ([string]::IsNullOrWhiteSpace($docs)) { $docs = Join-Path $env:USERPROFILE "Documents" }
+    $ModsRoot = Join-Path $docs "Timberborn\Mods"
+}
 $target = Join-Path $ModsRoot $modId
 
 # Accept either the ...\Timberborn_Data\Managed folder or the Timberborn game folder
