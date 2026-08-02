@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>TimberOS.DataConsole</AssemblyName>
+    <RootNamespace>TimberOS.DataConsole</RootNamespace>
+    <!-- The game supplies these assemblies at runtime; never copy them next to our DLL. -->
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>portable</DebugType>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <!--
+    Reference the game + Unity + Bindito + Newtonsoft assemblies directly from the
+    install's Managed folder. Private="false" keeps them out of our build output;
+    the game loads its own copies. A glob over Timberborn.*.dll avoids chasing every
+    transitive dependency by hand.
+  -->
+  <ItemGroup>
+    <Reference Include="$(TimberbornManaged)\Timberborn.*.dll" Private="false" />
+    <Reference Include="$(TimberbornManaged)\Bindito.Core.dll" Private="false" />
+    <Reference Include="$(TimberbornManaged)\Bindito.Unity.dll" Private="false" />
+    <Reference Include="$(TimberbornManaged)\Newtonsoft.Json.dll" Private="false" />
+    <Reference Include="$(TimberbornManaged)\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="$(TimberbornManaged)\UnityEngine.dll" Private="false" />
+  </ItemGroup>
+
+</Project>

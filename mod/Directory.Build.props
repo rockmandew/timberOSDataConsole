@@ -1,0 +1,11 @@
+<Project>
+  <!--
+    Locates the Timberborn "Managed" folder that holds the game + Unity assemblies
+    the mod compiles against. Override with an env var if your install differs:
+        setx TIMBERBORN_MANAGED "D:\Games\Timberborn\Timberborn_Data\Managed"
+  -->
+  <PropertyGroup>
+    <TimberbornManaged Condition="'$(TIMBERBORN_MANAGED)' != ''">$(TIMBERBORN_MANAGED)</TimberbornManaged>
+    <TimberbornManaged Condition="'$(TimberbornManaged)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Timberborn\Timberborn_Data\Managed</TimberbornManaged>
+  </PropertyGroup>
+</Project>

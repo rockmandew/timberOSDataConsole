@@ -1,0 +1,94 @@
+[
+  {
+    "schemaVersion": "1.0.0",
+    "messageType": "snapshot",
+    "source": "timberborn-mod",
+    "settlementId": "Beaverton",
+    "sequence": 0,
+    "capturedAt": "2026-08-01T00:00:00.000Z",
+    "gameTime": { "cycle": 2, "cycleDay": 1, "partialCycleDay": 1.0 },
+    "payload": {
+      "game": { "gameVersion": "1.0.0.0", "modVersion": "0.1.0", "factionId": "folktails", "settlementName": "Beaverton" },
+      "population": { "total": 22, "beavers": 20, "adults": 15, "children": 5, "bots": 2, "employed": 14, "openJobs": 3, "beds": 24, "contaminatedBeavers": 0 },
+      "resources": [
+        { "goodId": "Log", "amount": 184, "capacity": 300 },
+        { "goodId": "Plank", "amount": 96, "capacity": 240 }
+      ],
+      "collectors": [
+        { "name": "game", "status": "available", "error": null },
+        { "name": "population", "status": "available", "error": null },
+        { "name": "resources", "status": "available", "error": null },
+        { "name": "gameTime", "status": "available", "error": null }
+      ]
+    }
+  },
+  {
+    "schemaVersion": "1.0.0",
+    "messageType": "snapshot",
+    "source": "timberborn-mod",
+    "settlementId": "Beaverton",
+    "sequence": 1,
+    "capturedAt": "2026-08-01T00:00:00.000Z",
+    "gameTime": { "cycle": 2, "cycleDay": 2, "partialCycleDay": 2.0 },
+    "payload": {
+      "game": { "gameVersion": "1.0.0.0", "modVersion": "0.1.0", "factionId": "folktails", "settlementName": "Beaverton" },
+      "population": { "total": 22, "beavers": 20, "adults": 15, "children": 5, "bots": 2, "employed": 14, "openJobs": 3, "beds": 24, "contaminatedBeavers": 0 },
+      "resources": [
+        { "goodId": "Log", "amount": 162, "capacity": 300 },
+        { "goodId": "Plank", "amount": 104, "capacity": 240 }
+      ],
+      "collectors": [
+        { "name": "game", "status": "available", "error": null },
+        { "name": "population", "status": "available", "error": null },
+        { "name": "resources", "status": "available", "error": null },
+        { "name": "gameTime", "status": "available", "error": null }
+      ]
+    }
+  },
+  {
+    "schemaVersion": "1.0.0",
+    "messageType": "snapshot",
+    "source": "timberborn-mod",
+    "settlementId": "Beaverton",
+    "sequence": 2,
+    "capturedAt": "2026-08-01T00:00:00.000Z",
+    "gameTime": { "cycle": 2, "cycleDay": 3, "partialCycleDay": 3.0 },
+    "payload": {
+      "game": { "gameVersion": "1.0.0.0", "modVersion": "0.1.0", "factionId": "folktails", "settlementName": "Beaverton" },
+      "population": { "total": 22, "beavers": 20, "adults": 15, "children": 5, "bots": 2, "employed": 14, "openJobs": 3, "beds": 24, "contaminatedBeavers": 0 },
+      "resources": [
+        { "goodId": "Log", "amount": 139, "capacity": 300 },
+        { "goodId": "Plank", "amount": 121, "capacity": 240 }
+      ],
+      "collectors": [
+        { "name": "game", "status": "available", "error": null },
+        { "name": "population", "status": "available", "error": null },
+        { "name": "resources", "status": "available", "error": null },
+        { "name": "gameTime", "status": "available", "error": null }
+      ]
+    }
+  },
+  {
+    "schemaVersion": "1.0.0",
+    "messageType": "snapshot",
+    "source": "timberborn-mod",
+    "settlementId": "Beaverton",
+    "sequence": 3,
+    "capturedAt": "2026-08-01T00:00:00.000Z",
+    "gameTime": { "cycle": 2, "cycleDay": 4, "partialCycleDay": 4.0 },
+    "payload": {
+      "game": { "gameVersion": "1.0.0.0", "modVersion": "0.1.0", "factionId": "folktails", "settlementName": "Beaverton" },
+      "population": { "total": 23, "beavers": 21, "adults": 16, "children": 5, "bots": 2, "employed": 15, "openJobs": 2, "beds": 24, "contaminatedBeavers": 0 },
+      "resources": [
+        { "goodId": "Log", "amount": 118, "capacity": 300 },
+        { "goodId": "Plank", "amount": 133, "capacity": 240 }
+      ],
+      "collectors": [
+        { "name": "game", "status": "available", "error": null },
+        { "name": "population", "status": "available", "error": null },
+        { "name": "resources", "status": "available", "error": null },
+        { "name": "gameTime", "status": "available", "error": null }
+      ]
+    }
+  }
+]
