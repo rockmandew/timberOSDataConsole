@@ -111,8 +111,22 @@ http://localhost:8080/timberos/v1/snapshot
 You should see a page of JSON — your real population, resources, weather, and power. That's the
 Data Console working. (`http://localhost:8080/timberos/v1/health` gives a quick "is it alive" check.)
 
-> Seeing `503 / "No snapshot collected yet"`? You're not in a settlement yet — load a colony and
-> refresh. Seeing nothing / can't connect? The mod isn't enabled — recheck Step 4.
+The mod **starts the game's built-in HTTP server for you** as soon as a settlement loads, so the
+address above just works — you do *not* need to build anything in-game. (Timberborn's HTTP server is
+normally off until you place an *HTTP Adapter* building and click *Start API*; the mod does that
+step automatically.)
+
+> **"This site can't be reached" / connection refused?**
+> - You just installed or updated the mod while the game was open — **fully quit Timberborn and
+>   relaunch it**, then load your settlement. The mod only loads on a fresh game start.
+> - Make sure you're actually **in a settlement** (Step 4.3), not on the main menu.
+> - Check the log for the line `Started game HTTP server at http://localhost:8080/`. It's at
+>   `%USERPROFILE%\AppData\LocalLow\Mechanistry\Timberborn\Player.log`. If it says the port is in
+>   use, another program has `8080`; close it (or place an *HTTP Adapter* in-game, change its port,
+>   and use that port in the URL).
+>
+> Seeing `503 / "No snapshot collected yet"` instead? Good — the server is up; you're just not in a
+> settlement yet. Load a colony and refresh.
 
 ### Step 6 — (Optional) Try it without the game
 

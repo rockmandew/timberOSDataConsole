@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Timberborn.GameCycleSystem;
+using Timberborn.HttpApiSystem;
 using Timberborn.SingletonSystem;
 using TimberOS.DataConsole.Telemetry.Collectors;
 using UnityEngine;
@@ -26,6 +27,7 @@ namespace TimberOS.DataConsole.Telemetry
         private readonly WeatherCollector _weatherCollector;
         private readonly PowerCollector _powerCollector;
         private readonly GameCycleService _gameCycleService;
+        private readonly HttpApi _httpApi;
 
         private float _nextDueTime;
         private long _sequence;
@@ -37,7 +39,8 @@ namespace TimberOS.DataConsole.Telemetry
             ResourceCollector resourceCollector,
             WeatherCollector weatherCollector,
             PowerCollector powerCollector,
-            GameCycleService gameCycleService)
+            GameCycleService gameCycleService,
+            HttpApi httpApi)
         {
             _holder = holder;
             _gameStateCollector = gameStateCollector;
@@ -46,12 +49,53 @@ namespace TimberOS.DataConsole.Telemetry
             _weatherCollector = weatherCollector;
             _powerCollector = powerCollector;
             _gameCycleService = gameCycleService;
+            _httpApi = httpApi;
         }
 
         public void Load()
         {
             _nextDueTime = 0f;
+            EnsureHttpServerRunning();
             Debug.Log("[timberOS DataConsole] Snapshot coordinator loaded; serving telemetry at /timberos/v1/snapshot");
+        }
+
+        /// <summary>
+        /// The game's native HTTP server is off until a player opens an HTTP Adapter/Lever
+        /// building and clicks "Start API". Since this mod exists to serve telemetry, start
+        /// the server ourselves when a settlement loads so the endpoint is reachable without
+        /// requiring any in-game building. The server binds to http://localhost:{port}/ only
+        /// (loopback), and Start() is a no-op if it's already running (e.g. the player, or a
+        /// reload). Failures are non-fatal: telemetry snapshots are still built either way.
+        /// </summary>
+        private void EnsureHttpServerRunning()
+        {
+            try
+            {
+                if (_httpApi.IsRunning)
+                {
+                    Debug.Log($"[timberOS DataConsole] HTTP server already running at {_httpApi.Url}");
+                    return;
+                }
+
+                _httpApi.Start();
+
+                if (_httpApi.IsRunning)
+                {
+                    Debug.Log($"[timberOS DataConsole] Started game HTTP server at {_httpApi.Url}");
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        "[timberOS DataConsole] Could not start the game HTTP server" +
+                        (string.IsNullOrEmpty(_httpApi.ErrorMessage) ? "." : $": {_httpApi.ErrorMessage}") +
+                        $" (port {_httpApi.Port}). The port may be in use; free it or change the port on an " +
+                        "HTTP Adapter building, then reload.");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[timberOS DataConsole] Failed to auto-start the game HTTP server: {e.Message}");
+            }
         }
 
         public void UpdateSingleton()
