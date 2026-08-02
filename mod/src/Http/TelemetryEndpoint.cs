@@ -43,7 +43,7 @@ namespace TimberOS.DataConsole.Http
                 await WriteJson(context, new
                 {
                     ok = true,
-                    schemaVersion = "1.0.0",
+                    schemaVersion = "1.2.0",
                     hasSnapshot = current != null,
                     sequence = current?.Sequence
                 });

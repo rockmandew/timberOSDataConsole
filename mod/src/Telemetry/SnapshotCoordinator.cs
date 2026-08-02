@@ -17,7 +17,7 @@ namespace TimberOS.DataConsole.Telemetry
     /// </summary>
     public sealed class SnapshotCoordinator : ILoadableSingleton, IUpdatableSingleton
     {
-        private const string SchemaVersion = "1.0.0";
+        private const string SchemaVersion = "1.2.0";
         private const float IntervalSeconds = 2f;
 
         private readonly SnapshotHolder _holder;
@@ -26,6 +26,8 @@ namespace TimberOS.DataConsole.Telemetry
         private readonly ResourceCollector _resourceCollector;
         private readonly WeatherCollector _weatherCollector;
         private readonly PowerCollector _powerCollector;
+        private readonly ProductionCollector _productionCollector;
+        private readonly WaterCollector _waterCollector;
         private readonly GameCycleService _gameCycleService;
         private readonly HttpApi _httpApi;
 
@@ -39,6 +41,8 @@ namespace TimberOS.DataConsole.Telemetry
             ResourceCollector resourceCollector,
             WeatherCollector weatherCollector,
             PowerCollector powerCollector,
+            ProductionCollector productionCollector,
+            WaterCollector waterCollector,
             GameCycleService gameCycleService,
             HttpApi httpApi)
         {
@@ -48,6 +52,8 @@ namespace TimberOS.DataConsole.Telemetry
             _resourceCollector = resourceCollector;
             _weatherCollector = weatherCollector;
             _powerCollector = powerCollector;
+            _productionCollector = productionCollector;
+            _waterCollector = waterCollector;
             _gameCycleService = gameCycleService;
             _httpApi = httpApi;
         }
@@ -118,9 +124,11 @@ namespace TimberOS.DataConsole.Telemetry
             IReadOnlyList<ResourceDto>? resources = Run(_resourceCollector, statuses);
             WeatherDto? weather = Run(_weatherCollector, statuses);
             PowerDto? power = Run(_powerCollector, statuses);
+            ProductionDto? production = Run(_productionCollector, statuses);
+            WaterDto? water = Run(_waterCollector, statuses);
             GameTimeDto? gameTime = ReadGameTime(statuses);
 
-            var payload = new SnapshotPayload(game, population, resources, weather, power, statuses);
+            var payload = new SnapshotPayload(game, population, resources, weather, power, production, water, statuses);
 
             return new TelemetryEnvelope(
                 schemaVersion: SchemaVersion,

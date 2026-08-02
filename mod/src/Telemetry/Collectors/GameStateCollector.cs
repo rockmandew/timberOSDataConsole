@@ -13,7 +13,7 @@ namespace TimberOS.DataConsole.Telemetry.Collectors
     /// </summary>
     public sealed class GameStateCollector : ITelemetryCollector<GameStateDto>
     {
-        public const string ModVersion = "0.3.1";
+        public const string ModVersion = "0.4.0";
 
         private readonly FactionService _factionService;
         private readonly SettlementReferenceService _settlementReferenceService;

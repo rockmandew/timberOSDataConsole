@@ -58,10 +58,13 @@ namespace TimberOS.DataConsole.Telemetry
         [JsonProperty("resources")] public IReadOnlyList<ResourceDto>? Resources { get; }
         [JsonProperty("weather")] public WeatherDto? Weather { get; }
         [JsonProperty("power")] public PowerDto? Power { get; }
+        [JsonProperty("production")] public ProductionDto? Production { get; }
+        [JsonProperty("water")] public WaterDto? Water { get; }
         [JsonProperty("collectors")] public IReadOnlyList<CollectorStatusDto> Collectors { get; }
 
         public SnapshotPayload(GameStateDto? game, PopulationDto? population,
             IReadOnlyList<ResourceDto>? resources, WeatherDto? weather, PowerDto? power,
+            ProductionDto? production, WaterDto? water,
             IReadOnlyList<CollectorStatusDto> collectors)
         {
             Game = game;
@@ -69,6 +72,8 @@ namespace TimberOS.DataConsole.Telemetry
             Resources = resources;
             Weather = weather;
             Power = power;
+            Production = production;
+            Water = water;
             Collectors = collectors;
         }
     }
@@ -206,6 +211,66 @@ namespace TimberOS.DataConsole.Telemetry
             GoodId = goodId;
             Amount = amount;
             Capacity = capacity;
+        }
+    }
+
+    /// <summary>
+    /// Colony-wide production summary across all manufactories. <c>operating</c> is the
+    /// number actively able to produce; the rest are bucketed by the reason they're
+    /// stopped (priority order: paused → no recipe → no workers → no power → missing
+    /// ingredients/fuel → outputs full → idle). <c>utilization</c> is operating/buildings.
+    /// </summary>
+    public sealed class ProductionDto
+    {
+        [JsonProperty("buildings")] public int Buildings { get; }
+        [JsonProperty("operating")] public int Operating { get; }
+        [JsonProperty("utilization")] public float? Utilization { get; }
+        [JsonProperty("paused")] public int Paused { get; }
+        [JsonProperty("noWorkers")] public int NoWorkers { get; }
+        [JsonProperty("noPower")] public int NoPower { get; }
+        [JsonProperty("noIngredients")] public int NoIngredients { get; }
+        [JsonProperty("outputFull")] public int OutputFull { get; }
+        [JsonProperty("noRecipe")] public int NoRecipe { get; }
+        [JsonProperty("idle")] public int Idle { get; }
+        [JsonProperty("dominantConstraint")] public string? DominantConstraint { get; }
+
+        public ProductionDto(int buildings, int operating, float? utilization, int paused,
+            int noWorkers, int noPower, int noIngredients, int outputFull, int noRecipe, int idle,
+            string? dominantConstraint)
+        {
+            Buildings = buildings;
+            Operating = operating;
+            Utilization = utilization;
+            Paused = paused;
+            NoWorkers = noWorkers;
+            NoPower = noPower;
+            NoIngredients = noIngredients;
+            OutputFull = outputFull;
+            NoRecipe = noRecipe;
+            Idle = idle;
+            DominantConstraint = dominantConstraint;
+        }
+    }
+
+    /// <summary>
+    /// Colony water-source summary. <c>contaminatedFraction</c> is the flow-weighted
+    /// share of incoming water that is contaminated (badwater) — i.e. how much of what's
+    /// entering the map is bad, which is what spikes during a badtide. Null when there is
+    /// no active source flow.
+    /// </summary>
+    public sealed class WaterDto
+    {
+        [JsonProperty("sources")] public int Sources { get; }
+        [JsonProperty("contaminatedSources")] public int ContaminatedSources { get; }
+        [JsonProperty("contaminatedFraction")] public float? ContaminatedFraction { get; }
+        [JsonProperty("totalStrength")] public float TotalStrength { get; }
+
+        public WaterDto(int sources, int contaminatedSources, float? contaminatedFraction, float totalStrength)
+        {
+            Sources = sources;
+            ContaminatedSources = contaminatedSources;
+            ContaminatedFraction = contaminatedFraction;
+            TotalStrength = totalStrength;
         }
     }
 

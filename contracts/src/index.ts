@@ -11,7 +11,7 @@ import { z } from 'zod'
  * must treat `null` as "unknown" and surface it as such, not as an empty value.
  */
 
-export const SCHEMA_VERSION = '1.1.0'
+export const SCHEMA_VERSION = '1.2.0'
 
 /** In-game time. Cycles are Timberborn's seasons; a cycle contains several days. */
 export const GameTimeSchema = z.object({
@@ -86,6 +86,36 @@ export const PowerSchema = z.object({
 })
 export type Power = z.infer<typeof PowerSchema>
 
+/**
+ * Colony-wide production summary. `operating` is how many manufactories can
+ * currently produce; the rest are bucketed by the first reason they're stopped.
+ * `utilization` is operating/buildings (null when there are no manufactories).
+ */
+export const ProductionSchema = z.object({
+  buildings: z.number().int(),
+  operating: z.number().int(),
+  utilization: z.number().nullable(),
+  paused: z.number().int(),
+  noWorkers: z.number().int(),
+  noPower: z.number().int(),
+  noIngredients: z.number().int(),
+  outputFull: z.number().int(),
+  noRecipe: z.number().int(),
+  idle: z.number().int(),
+  /** e.g. "no_workers" | "no_power" | "no_ingredients" | "output_full" | "no_recipe" | "paused" | "idle" */
+  dominantConstraint: z.string().nullable(),
+})
+export type Production = z.infer<typeof ProductionSchema>
+
+/** Water-source contamination: flow-weighted share of incoming water that's badwater. */
+export const WaterSchema = z.object({
+  sources: z.number().int(),
+  contaminatedSources: z.number().int(),
+  contaminatedFraction: z.number().nullable(),
+  totalStrength: z.number(),
+})
+export type Water = z.infer<typeof WaterSchema>
+
 export const CollectorStatusSchema = z.object({
   name: z.string(),
   status: z.enum(['available', 'unavailable', 'error']),
@@ -100,6 +130,9 @@ export const SnapshotPayloadSchema = z.object({
   // Added in schema 1.1.0; nullish so older fixtures that predate them still validate.
   weather: WeatherSchema.nullish(),
   power: PowerSchema.nullish(),
+  // Added in schema 1.2.0; nullish for the same backward-compatibility reason.
+  production: ProductionSchema.nullish(),
+  water: WaterSchema.nullish(),
   collectors: z.array(CollectorStatusSchema),
 })
 export type SnapshotPayload = z.infer<typeof SnapshotPayloadSchema>
