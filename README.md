@@ -76,15 +76,22 @@ cd timberOSDataConsole
 pwsh scripts/package-mod.ps1
 ```
 
+> On **Windows PowerShell** (the blue icon, no separate install), use `powershell` instead of `pwsh`:
+> ```powershell
+> powershell -ExecutionPolicy Bypass -File scripts/package-mod.ps1
+> ```
+
 This compiles the mod against your installed game and copies it into
 `Documents\Timberborn\Mods\rockmandew.TimberOSDataConsole\`. When it finishes it prints
 **"Installed to …"**. That's success.
 
-> If it can't find the game, your Timberborn is in a non-default folder. Tell it where, then re-run:
-> ```powershell
-> $env:TIMBERBORN_MANAGED = "D:\YourPath\Timberborn\Timberborn_Data\Managed"
-> pwsh scripts/package-mod.ps1
-> ```
+The script **finds Timberborn automatically** — it reads your Steam library list, so it works no
+matter which drive the game is on (`C:`, `D:`, etc.). If it still can't find it, it will **ask you
+for the path**. You can also tell it up front:
+
+```powershell
+pwsh scripts/package-mod.ps1 -TimberbornManaged "D:\SteamLibrary\steamapps\common\Timberborn"
+```
 
 ### Step 4 — Turn the mod on in the game
 

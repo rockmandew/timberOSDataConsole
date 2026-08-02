@@ -1,8 +1,16 @@
 <Project>
   <!--
     Locates the Timberborn "Managed" folder that holds the game + Unity assemblies
-    the mod compiles against. Override with an env var if your install differs:
-        setx TIMBERBORN_MANAGED "D:\Games\Timberborn\Timberborn_Data\Managed"
+    the mod compiles against.
+
+    The recommended entry point, scripts/package-mod.ps1, auto-detects your Steam
+    install (across every drive) and passes the path in as -p:TimberbornManaged=...,
+    so you normally don't need to set anything here.
+
+    If you build this project directly (without the script) and your install isn't at
+    the default path below, override it with the property or an env var:
+        dotnet build -p:TimberbornManaged="D:\SteamLibrary\steamapps\common\Timberborn\Timberborn_Data\Managed"
+        setx TIMBERBORN_MANAGED "D:\SteamLibrary\steamapps\common\Timberborn\Timberborn_Data\Managed"
   -->
   <PropertyGroup>
     <TimberbornManaged Condition="'$(TIMBERBORN_MANAGED)' != ''">$(TIMBERBORN_MANAGED)</TimberbornManaged>
