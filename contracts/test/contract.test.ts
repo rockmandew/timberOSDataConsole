@@ -23,6 +23,14 @@ describe('telemetry contract', () => {
     }
   })
 
+  it('parses the weather and power slices when present', async () => {
+    const series = await loadFixture()
+    const withWeather = series.map(parseTelemetryEnvelope).find((s) => s.payload.weather)
+    expect(withWeather?.payload.weather?.hazardId).toBe('Drought')
+    expect(withWeather?.payload.power?.networks.length).toBe(1)
+    expect(withWeather?.payload.power?.totalSurplus).toBe(25)
+  })
+
   it('treats a missing collector value as null, not zero', () => {
     const env = parseTelemetryEnvelope({
       schemaVersion: SCHEMA_VERSION,

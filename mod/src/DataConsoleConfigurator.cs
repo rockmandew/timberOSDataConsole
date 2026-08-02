@@ -21,6 +21,8 @@ namespace TimberOS.DataConsole
             Bind<GameStateCollector>().AsSingleton();
             Bind<PopulationCollector>().AsSingleton();
             Bind<ResourceCollector>().AsSingleton();
+            Bind<WeatherCollector>().AsSingleton();
+            Bind<PowerCollector>().AsSingleton();
 
             // ILoadableSingleton + IUpdatableSingleton — the SingletonSystem drives it.
             Bind<SnapshotCoordinator>().AsSingleton();

@@ -11,7 +11,7 @@ import { z } from 'zod'
  * must treat `null` as "unknown" and surface it as such, not as an empty value.
  */
 
-export const SCHEMA_VERSION = '1.0.0'
+export const SCHEMA_VERSION = '1.1.0'
 
 /** In-game time. Cycles are Timberborn's seasons; a cycle contains several days. */
 export const GameTimeSchema = z.object({
@@ -51,6 +51,41 @@ export const ResourceSchema = z.object({
 })
 export type Resource = z.infer<typeof ResourceSchema>
 
+/** Weather / hazard cycle. hazardId is the current cycle's hazard type (drought/badtide). */
+export const WeatherSchema = z.object({
+  isHazardous: z.boolean(),
+  hazardId: z.string().nullable(),
+  temperateDurationDays: z.number().int(),
+  hazardDurationDays: z.number().int(),
+  daysUntilHazard: z.number().int().nullable(),
+  hazardDaysRemaining: z.number().int().nullable(),
+})
+export type Weather = z.infer<typeof WeatherSchema>
+
+export const PowerNetworkSchema = z.object({
+  index: z.number().int(),
+  supply: z.number().int(),
+  demand: z.number().int(),
+  surplus: z.number().int(),
+  batteryCharge: z.number().int(),
+  batteryCapacity: z.number().int(),
+  generators: z.number().int(),
+  powered: z.boolean(),
+})
+export type PowerNetwork = z.infer<typeof PowerNetworkSchema>
+
+export const PowerSchema = z.object({
+  networkCount: z.number().int(),
+  totalSupply: z.number().int(),
+  totalDemand: z.number().int(),
+  totalSurplus: z.number().int(),
+  totalBatteryCharge: z.number().int(),
+  totalBatteryCapacity: z.number().int(),
+  networksInDeficit: z.number().int(),
+  networks: z.array(PowerNetworkSchema),
+})
+export type Power = z.infer<typeof PowerSchema>
+
 export const CollectorStatusSchema = z.object({
   name: z.string(),
   status: z.enum(['available', 'unavailable', 'error']),
@@ -62,6 +97,9 @@ export const SnapshotPayloadSchema = z.object({
   game: GameStateSchema.nullable(),
   population: PopulationSchema.nullable(),
   resources: z.array(ResourceSchema).nullable(),
+  // Added in schema 1.1.0; nullish so older fixtures that predate them still validate.
+  weather: WeatherSchema.nullish(),
+  power: PowerSchema.nullish(),
   collectors: z.array(CollectorStatusSchema),
 })
 export type SnapshotPayload = z.infer<typeof SnapshotPayloadSchema>

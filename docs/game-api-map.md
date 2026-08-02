@@ -57,6 +57,37 @@ Global stock aggregated across public district inventories.
 and outputs) are not counted. This under-counts totals slightly during heavy production. Tracked as
 issue **R-1**.
 
+## `payload.weather`
+
+Source: `WeatherService` + `HazardousWeatherService` + `GameCycleService`.
+
+| Field | Source member | Confidence |
+| --- | --- | --- |
+| `isHazardous` | `WeatherService.IsHazardousWeather` | High |
+| `hazardId` | `HazardousWeatherService.CurrentCycleHazardousWeather.Id` (drought/badtide) | High |
+| `temperateDurationDays` | `WeatherService.TemperateWeatherDuration` | High |
+| `hazardDurationDays` | `WeatherService.HazardousWeatherDuration` | High |
+| `daysUntilHazard` | `HazardousWeatherStartCycleDay − CycleDay` (temperate phase only) | High (derived) |
+| `hazardDaysRemaining` | `CycleLengthInDays − CycleDay` (hazardous phase only) | High (derived) |
+
+## `payload.power`
+
+Source: `MechanicalGraphRegistry.MechanicalGraphs` (per-network `MechanicalGraph`).
+
+| Field | Source member | Confidence |
+| --- | --- | --- |
+| `networks[].supply` | `MechanicalGraph.PowerSupply` | High |
+| `networks[].demand` | `MechanicalGraph.PowerDemand` | High |
+| `networks[].surplus` | `MechanicalGraph.PowerSurplus` | High |
+| `networks[].batteryCharge` | `MechanicalGraph.BatteryCharge` | High |
+| `networks[].batteryCapacity` | `MechanicalGraph.BatteryCapacity` | High |
+| `networks[].generators` | `MechanicalGraph.NumberOfGenerators` | High |
+| `networks[].powered` | `MechanicalGraph.Powered` | High |
+| `total*` / `networksInDeficit` | summed across graphs by the collector | High (derived) |
+
+Network ordering is registry order; there is no stable network id in-game, so `index` is
+positional and may shift as networks split/merge. Tracked as issue **PW-1**.
+
 ## Extraction techniques legend
 
 - **DI, property read** — service injected via Bindito constructor, value read on the main thread.

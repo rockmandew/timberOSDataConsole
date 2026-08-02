@@ -38,7 +38,8 @@ Served by the mod on the game's native HTTP server (default `http://localhost:80
 | `GET /timberos/v1/snapshot` | Full `TelemetryEnvelope` (`503` until the first collection after a settlement loads) |
 
 The envelope carries a game-time header plus `payload.game`, `payload.population`,
-`payload.resources[]`, and per-collector `payload.collectors[]` health. Any value the mod could not
+`payload.resources[]`, `payload.weather`, `payload.power`, and per-collector
+`payload.collectors[]` health. Any value the mod could not
 read is `null` (never `0`) so consumers can distinguish "unknown" from "empty". Full shape:
 [`contracts/src/index.ts`](contracts/src/index.ts).
 
@@ -95,10 +96,14 @@ backlog **I-1**).
 | **R-1** | Count goods in non-public building inventories | `resources[]` slightly under-counts during heavy production |
 | **G-1** | Emit a stable settlement GUID, not just the save name | Reliable multi-settlement history keying |
 | **P-1** | Add per-district population + bot workforce breakdown | District-level advisor rules |
-| **W-1** | Weather / drought / badtide collector | Survival forecasting (biggest timberOS value) |
-| **B-1** | Buildings + production + power + water collectors | Broaden telemetry to the full spec |
+| **PW-1** | Give power networks a stable id (currently positional `index`) | Reliable per-network history/alerts |
+| **B-1** | Buildings + production + water collectors | Broaden telemetry to the full spec |
 | **N-1** | Resolve localized good/faction display names | Nicer labels (currently ids; mapped on the TS side) |
 | **A-1** | Optional auth token + configurable bind/port for non-loopback use | Security when exposed beyond localhost |
+
+**Implemented so far (schema 1.1.0):** game-time header, `game`, `population` (incl. jobs/housing/
+contamination), `resources` (global stock + capacity), `weather` (drought/badtide cycle + days
+remaining), `power` (per-network supply/demand/battery + totals), and per-collector health.
 
 ## Design notes
 

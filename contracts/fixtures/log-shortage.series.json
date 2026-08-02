@@ -1,6 +1,6 @@
 [
   {
-    "schemaVersion": "1.0.0",
+    "schemaVersion": "1.1.0",
     "messageType": "snapshot",
     "source": "timberborn-mod",
     "settlementId": "Beaverton",
@@ -23,7 +23,7 @@
     }
   },
   {
-    "schemaVersion": "1.0.0",
+    "schemaVersion": "1.1.0",
     "messageType": "snapshot",
     "source": "timberborn-mod",
     "settlementId": "Beaverton",
@@ -46,7 +46,7 @@
     }
   },
   {
-    "schemaVersion": "1.0.0",
+    "schemaVersion": "1.1.0",
     "messageType": "snapshot",
     "source": "timberborn-mod",
     "settlementId": "Beaverton",
@@ -69,7 +69,7 @@
     }
   },
   {
-    "schemaVersion": "1.0.0",
+    "schemaVersion": "1.1.0",
     "messageType": "snapshot",
     "source": "timberborn-mod",
     "settlementId": "Beaverton",
@@ -83,6 +83,26 @@
         { "goodId": "Log", "amount": 118, "capacity": 300 },
         { "goodId": "Plank", "amount": 133, "capacity": 240 }
       ],
+      "weather": {
+        "isHazardous": false,
+        "hazardId": "Drought",
+        "temperateDurationDays": 6,
+        "hazardDurationDays": 5,
+        "daysUntilHazard": 2,
+        "hazardDaysRemaining": null
+      },
+      "power": {
+        "networkCount": 1,
+        "totalSupply": 120,
+        "totalDemand": 95,
+        "totalSurplus": 25,
+        "totalBatteryCharge": 400,
+        "totalBatteryCapacity": 600,
+        "networksInDeficit": 0,
+        "networks": [
+          { "index": 0, "supply": 120, "demand": 95, "surplus": 25, "batteryCharge": 400, "batteryCapacity": 600, "generators": 3, "powered": true }
+        ]
+      },
       "collectors": [
         { "name": "game", "status": "available", "error": null },
         { "name": "population", "status": "available", "error": null },

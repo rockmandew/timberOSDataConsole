@@ -23,6 +23,8 @@ namespace TimberOS.DataConsole.Telemetry
         private readonly GameStateCollector _gameStateCollector;
         private readonly PopulationCollector _populationCollector;
         private readonly ResourceCollector _resourceCollector;
+        private readonly WeatherCollector _weatherCollector;
+        private readonly PowerCollector _powerCollector;
         private readonly GameCycleService _gameCycleService;
 
         private float _nextDueTime;
@@ -33,12 +35,16 @@ namespace TimberOS.DataConsole.Telemetry
             GameStateCollector gameStateCollector,
             PopulationCollector populationCollector,
             ResourceCollector resourceCollector,
+            WeatherCollector weatherCollector,
+            PowerCollector powerCollector,
             GameCycleService gameCycleService)
         {
             _holder = holder;
             _gameStateCollector = gameStateCollector;
             _populationCollector = populationCollector;
             _resourceCollector = resourceCollector;
+            _weatherCollector = weatherCollector;
+            _powerCollector = powerCollector;
             _gameCycleService = gameCycleService;
         }
 
@@ -66,9 +72,11 @@ namespace TimberOS.DataConsole.Telemetry
             GameStateDto? game = Run(_gameStateCollector, statuses);
             PopulationDto? population = Run(_populationCollector, statuses);
             IReadOnlyList<ResourceDto>? resources = Run(_resourceCollector, statuses);
+            WeatherDto? weather = Run(_weatherCollector, statuses);
+            PowerDto? power = Run(_powerCollector, statuses);
             GameTimeDto? gameTime = ReadGameTime(statuses);
 
-            var payload = new SnapshotPayload(game, population, resources, statuses);
+            var payload = new SnapshotPayload(game, population, resources, weather, power, statuses);
 
             return new TelemetryEnvelope(
                 schemaVersion: SchemaVersion,

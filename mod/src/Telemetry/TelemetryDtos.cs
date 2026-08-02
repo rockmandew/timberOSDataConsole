@@ -56,15 +56,98 @@ namespace TimberOS.DataConsole.Telemetry
         [JsonProperty("game")] public GameStateDto? Game { get; }
         [JsonProperty("population")] public PopulationDto? Population { get; }
         [JsonProperty("resources")] public IReadOnlyList<ResourceDto>? Resources { get; }
+        [JsonProperty("weather")] public WeatherDto? Weather { get; }
+        [JsonProperty("power")] public PowerDto? Power { get; }
         [JsonProperty("collectors")] public IReadOnlyList<CollectorStatusDto> Collectors { get; }
 
         public SnapshotPayload(GameStateDto? game, PopulationDto? population,
-            IReadOnlyList<ResourceDto>? resources, IReadOnlyList<CollectorStatusDto> collectors)
+            IReadOnlyList<ResourceDto>? resources, WeatherDto? weather, PowerDto? power,
+            IReadOnlyList<CollectorStatusDto> collectors)
         {
             Game = game;
             Population = population;
             Resources = resources;
+            Weather = weather;
+            Power = power;
             Collectors = collectors;
+        }
+    }
+
+    /// <summary>
+    /// Weather / hazard state. Timberborn cycles run temperate days then a hazardous
+    /// stretch (drought or badtide). <c>hazardId</c> is the hazard type selected for the
+    /// current cycle (upcoming while temperate, active once hazardous).
+    /// </summary>
+    public sealed class WeatherDto
+    {
+        [JsonProperty("isHazardous")] public bool IsHazardous { get; }
+        [JsonProperty("hazardId")] public string? HazardId { get; }
+        [JsonProperty("temperateDurationDays")] public int TemperateDurationDays { get; }
+        [JsonProperty("hazardDurationDays")] public int HazardDurationDays { get; }
+        [JsonProperty("daysUntilHazard")] public int? DaysUntilHazard { get; }
+        [JsonProperty("hazardDaysRemaining")] public int? HazardDaysRemaining { get; }
+
+        public WeatherDto(bool isHazardous, string? hazardId, int temperateDurationDays,
+            int hazardDurationDays, int? daysUntilHazard, int? hazardDaysRemaining)
+        {
+            IsHazardous = isHazardous;
+            HazardId = hazardId;
+            TemperateDurationDays = temperateDurationDays;
+            HazardDurationDays = hazardDurationDays;
+            DaysUntilHazard = daysUntilHazard;
+            HazardDaysRemaining = hazardDaysRemaining;
+        }
+    }
+
+    /// <summary>One mechanical (power) network plus rolled-up totals in <see cref="PowerDto"/>.</summary>
+    public sealed class PowerNetworkDto
+    {
+        [JsonProperty("index")] public int Index { get; }
+        [JsonProperty("supply")] public int Supply { get; }
+        [JsonProperty("demand")] public int Demand { get; }
+        [JsonProperty("surplus")] public int Surplus { get; }
+        [JsonProperty("batteryCharge")] public int BatteryCharge { get; }
+        [JsonProperty("batteryCapacity")] public int BatteryCapacity { get; }
+        [JsonProperty("generators")] public int Generators { get; }
+        [JsonProperty("powered")] public bool Powered { get; }
+
+        public PowerNetworkDto(int index, int supply, int demand, int surplus, int batteryCharge,
+            int batteryCapacity, int generators, bool powered)
+        {
+            Index = index;
+            Supply = supply;
+            Demand = demand;
+            Surplus = surplus;
+            BatteryCharge = batteryCharge;
+            BatteryCapacity = batteryCapacity;
+            Generators = generators;
+            Powered = powered;
+        }
+    }
+
+    public sealed class PowerDto
+    {
+        [JsonProperty("networkCount")] public int NetworkCount { get; }
+        [JsonProperty("totalSupply")] public int TotalSupply { get; }
+        [JsonProperty("totalDemand")] public int TotalDemand { get; }
+        [JsonProperty("totalSurplus")] public int TotalSurplus { get; }
+        [JsonProperty("totalBatteryCharge")] public int TotalBatteryCharge { get; }
+        [JsonProperty("totalBatteryCapacity")] public int TotalBatteryCapacity { get; }
+        [JsonProperty("networksInDeficit")] public int NetworksInDeficit { get; }
+        [JsonProperty("networks")] public IReadOnlyList<PowerNetworkDto> Networks { get; }
+
+        public PowerDto(int networkCount, int totalSupply, int totalDemand, int totalSurplus,
+            int totalBatteryCharge, int totalBatteryCapacity, int networksInDeficit,
+            IReadOnlyList<PowerNetworkDto> networks)
+        {
+            NetworkCount = networkCount;
+            TotalSupply = totalSupply;
+            TotalDemand = totalDemand;
+            TotalSurplus = totalSurplus;
+            TotalBatteryCharge = totalBatteryCharge;
+            TotalBatteryCapacity = totalBatteryCapacity;
+            NetworksInDeficit = networksInDeficit;
+            Networks = networks;
         }
     }
 

@@ -92,8 +92,12 @@ See [game-api-map.md](game-api-map.md) for field-by-field mapping and known gaps
 ## 6. What was intentionally deferred
 
 - Goods in non-public building inventories (mid-process workshop stock) are not summed yet.
-- Weather / drought / badtide, power, water, buildings, production — later phases.
+- Water fluid-map, buildings, and production — later phases.
 - Localized good/faction display names (mod emits stable ids; the TS side maps names).
+
+> Update (schema 1.1.0): weather (drought/badtide cycle + days remaining) and power
+> (per-network supply/demand/battery) collectors have since been added and verified — see
+> [game-api-map.md](game-api-map.md).
 
 These are captured as issues in the README's prioritized backlog.
 
